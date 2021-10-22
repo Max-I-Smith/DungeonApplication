@@ -1,4 +1,4 @@
-﻿namespace DungeonProgram
+﻿namespace DungeonLibrary
 {
     public class CharacterBase
     {

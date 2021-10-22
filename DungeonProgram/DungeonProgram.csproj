@@ -43,7 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CharacterBase.cs" />
     <Compile Include="RunDungeon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DungeonLibrary
 {
-    class Player:CharacterBase
+    public class Player:CharacterBase
     {
 
         //Grab players weapon
@@ -15,15 +15,16 @@ namespace DungeonLibrary
         public Race PlayerRace { get; set; }
         //grab class
         public Class PlayerClass { get; set; }
-        public Player(string name,int hitchance,int blockchance,int maxlife,int remaininglife,Race playerrace,Class playerclass)
+        public Player(string name,int hitchance,int blockchance,int maxlife,int remaininglife,Race playerrace/*,Class playerclass*/,Weapons weapon)
         {
+            EquippedWeapon = weapon;
             Name = name;
             HitChance = hitchance;
             BlockChance = blockchance;
             MaxLife = maxlife;
             RemainingLife = remaininglife;
             PlayerRace = playerrace;
-            PlayerClass = playerclass;
+            //PlayerClass = playerclass;
 
 
             //Depending on Character Race Give attributes

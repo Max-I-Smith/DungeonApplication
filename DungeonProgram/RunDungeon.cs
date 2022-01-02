@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DungeonLibrary;
+﻿using DungeonLibrary;
+using System;
 
 namespace DungeonProgram
 {
@@ -11,12 +7,8 @@ namespace DungeonProgram
     {
         static void Main(string[] args)
         {
-            Console.Title = "The End of the World";
             //Title the console window
-
-            Console.WriteLine("You enter the dark tunnel......");
-
-
+            Console.Title = "The End of the World";
             // Weapons
             //Creating a list of possible weapons and putting them into an array
             #region Weapons
@@ -39,37 +31,166 @@ namespace DungeonProgram
 
             Weapons[] mWeapons = { mDagger, mGreatSword, mSword, mMace, mStaff };
 
-            
+
             //TODO add legendary weapons? maybe
 
             #endregion
-            //TODO Player
-           
+
+
+            // TODO Player
+            Player player = new Player("Hero",60,5,20,20, Race.Human, sword);
+            bool createPlayer = false;
+            string userName = "";
+            string userRace = "";
+            bool CompleteGame = false;
+            //Ask user for player info 
+            #region Player Customization
+            //do
+            //{
+
+            //    Console.WriteLine("Please enter your hero's name\n");
+            //    userName = Console.ReadLine();
+            //    if (userName =="ADMIN")
+            //    { CompleteGame = true; }
+            //    Console.WriteLine("Please select a Race:\n");
+            //    Console.WriteLine("1: HalfOrc\n" +
+            //                      "2: Human\n" +
+            //                      "3: Elf\n" +
+            //                      "4: Hobbit\n" +
+            //                      "5: HalfElf\n" +
+            //                      "6: Dwarf\n" +
+            //                      "7: Gnome\n");
+            //    if (CompleteGame == true)
+            //    {
+            //        Console.WriteLine("You have unlocked the Secret Race: 8: WereWolf\n");
+            //    }
+            //    string playerRace = Console.ReadLine().ToUpper();
+
+
+            //    switch (playerRace)
+            //    {
+            //        case "HALFORC":
+            //            Player  player= new Player(userName, 10, 10, 10, 10, Race.HalfOrc);
+            //            break;
+            //        case "HUMAN":
+            //            Player player = new Player(userName, 10, 10, 10, 10, Race.Human);
+            //            break;
+            //        case "ELF":
+            //            Player player = new Player(userName, 10, 10, 10, 10, Race.Elf);
+            //            break;
+            //        case "HOBBIT":
+            //            Player player = new Player(userName, 10, 10, 10, 10, Race.Hobbit);
+            //            break;
+            //        case "HALFELF":
+            //            Player player = new Player(userName, 10, 10, 10, 10, Race.HalfElf);
+            //            break;
+            //        case "DWARF":
+            //            Player player = new Player(userName, 10, 10, 10, 10, Race.Dwarf);
+            //            break;
+            //        case "GNOME":
+            //            Player player = new Player(userName, 10, 10, 10, 10, Race.Gnome);
+            //            break;
+
+            //        default:
+            //            break;
+            //    }//end switch
+            //    createPlayer = true;
+
+            //}
+            //while (createPlayer == false);
+            #endregion
             //TODO Extra customization
+            Console.WriteLine("You have been sent to cleanse this dark place of the terrible experiments created here.\n");
 
-            //TODO Loop for room
+            Console.WriteLine("You enter the dark tunnel......");
 
-            //TODO Room Description
 
-            //TODO Monster
+            // Loop for rooms in the dungeon
+            bool exit = false;//Check if player wants to continue/Has lost or won
+            do
+            {
+                //Room Description
+                Console.WriteLine(GetRoom());
 
-            //TODO  Menu loop
+                RandMonster randMonster = new RandMonster();
+                Console.WriteLine("Before you stands one of the Dark Lord's Abominations!\n");
 
-            //TODO Menu Options
+                bool reload = false;//reload the menu
+                int score = 0;
+                do
+                {
+                    // 8. Create a menu of options
+                    Console.WriteLine("\nPlease choose an action:\n" +
+                        "A) Attack\n" +
+                        "R) Run Away\n" +
+                        "P) Player info\n" +
+                        "M) Monster info\n" +
+                        "X) Exit\n");
+                    // 9. Capture user choice
+                    //string userChoice = Console.ReadLine();
+                    ConsoleKey userChoice = Console.ReadKey(true).Key;
+                    Console.Clear();
+                    // 10. Perform an action based on the users input
+                    switch (userChoice)
+                    {
+                        case ConsoleKey.A:
+                            // 11. Create attack/battle functionality
+                            Combat.Attack(player, randMonster);
+                            Combat.Attack(randMonster, player);
+                            if (randMonster.RemainingLife <= 0)
+                            {
+                                // 12. Handle if the user wins 
+                                //its dead
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("\nYou killed {0}!\n", randMonster.Name);
+                                Console.ResetColor();
+                                reload = true;//this breaks us out of the loop to get a new room and new monster
+                                score++;
+                            }
+                            break;
+                        case ConsoleKey.R:
+                            //14. Monster Free Attack
+                            Console.WriteLine($"{randMonster.Name} attacks you as you flee.");
+                            Combat.Attack(randMonster, player);//free attack
+                            Console.WriteLine();
+                            reload = true;//load a new room
+                            break;
+                        case ConsoleKey.P:
+                            Console.WriteLine("Player Info");
+                            // Write out player info to screen
+                            Console.WriteLine(player);
+                            break;
+                        case ConsoleKey.M:
+                            Console.WriteLine("Monster Info");
+                            // 15. Write out Monster info to screen
+                            Console.WriteLine(randMonster);
+                            break;
+                        case ConsoleKey.X:
+                        case ConsoleKey.E:
+                            Console.WriteLine("Noone likes a quitter.");
+                            exit = true;
+                            break;
+                        default:
+                            Console.WriteLine("Thou hast chosen an improper option. Try again.");
+                            break;
+                    }//end switch
 
-            //TODO User Choice
 
-            //TODO Use User input for actions
+                    //16. Check the players life
+                    if (player.RemainingLife <= 0)
+                    {
+                        Console.WriteLine("You have fallen in battle!");
+                        Console.WriteLine("Your score was: "+score);
+                        exit = true;//breaks out of both loops
+                    }
+                } while (!reload && !exit);
 
-            //TODO Battle Functionality
 
-            //TODO Handle if user wins
 
-            //TODO Opportunity Attack
 
-            //TODO Display Monster Description
 
-            //TODO Check Players life
+            } while (!exit);
+
 
             //TODO Display score/If they've won
             // Boss after certain number of rooms/defeated monsters
@@ -77,5 +198,21 @@ namespace DungeonProgram
 
 
         }//end main
+        private static string GetRoom()
+        {
+            string[] rooms =
+            {
+                "Rusting spikes line the walls and ceiling of this chamber. The dusty floor shows no sign that the walls move over it, but you can see the skeleton of some humanoid impaled on some wall spikes nearby.",
+                "This chamber holds one occupant: the statue of a male figure with elven features but the broad, muscular body of a hale human. It kneels on the floor as though fallen to that posture. Both its arms reach upward in supplication, and its face is a mask of grief. Two great feathered wings droop from its back, both sculpted to look broken. The statue is skillfully crafted.",
+                "A horrendous, overwhelming stench wafts from the room before you. Small cages containing small animals and large insects line the walls. Some of the creatures look sickly and alive but most are clearly dead. Their rotting corpses and the unclean cages no doubt result in the zoo's foul odor. A cat mews weakly from its cage, but the other creatures just silently shrink back into their filthy prisons.",
+                "This tiny room holds a curious array of machinery. Winches and levers project from every wall, and chains with handles dangle from the ceiling. On a nearby wall, you note a pictogram of what looks like a scythe on a chain.",
+                " Rats inside the room shriek when they hear the door open, then they run in all directions from a putrid corpse lying in the center of the floor. As these creatures crowd around the edges of the room, seeking to crawl through a hole in one corner, they fight one another. The stinking corpse in the middle of the room looks human, but the damage both time and the rats have wrought are enough to make determining its race by appearance an extremely difficult task at best."
+            };
+            Random ran = new Random();
+            int index = ran.Next(rooms.Length);
+
+            string room = rooms[index];
+            return room;
+        }//end GetRoom
     }//end class
 }//end namespace
